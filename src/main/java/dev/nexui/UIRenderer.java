@@ -15,36 +15,42 @@ public final class UIRenderer {
         List<Component> renderedComponents = new ArrayList<>();
 
         for (Object item : project.getComponents()) {
-            if (!(item instanceof Map<?, ?> component)) {
+            if (!(item instanceof Map<?, ?>)) {
                 continue;
             }
 
-            if (Boolean.FALSE.equals(component.get("visible"))) {
+            Map<?, ?> component = (Map<?, ?>) item;
+
+            Object rawVisible = component.get("visible");
+            if (Boolean.FALSE.equals(rawVisible)) {
                 continue;
             }
 
-            if (!"text".equalsIgnoreCase(
-                    String.valueOf(component.get("type")))) {
+            Object rawType = component.get("type");
+            if (!"text".equalsIgnoreCase(String.valueOf(rawType))) {
                 continue;
             }
 
             Object rawProperties = component.get("properties");
-
-            if (!(rawProperties instanceof Map<?, ?> properties)) {
+            if (!(rawProperties instanceof Map<?, ?>)) {
                 continue;
             }
 
-            String text = String.valueOf(
-                    properties.getOrDefault("text", "")
-            );
+            Map<?, ?> properties = (Map<?, ?>) rawProperties;
 
-            String color = String.valueOf(
-                    properties.getOrDefault("color", "#FFFFFF")
-            );
+            Object rawText = properties.get("text");
+            String text = rawText == null
+                    ? ""
+                    : String.valueOf(rawText);
+
+            Object rawColor = properties.get("color");
+            String color = rawColor == null
+                    ? "#FFFFFF"
+                    : String.valueOf(rawColor);
 
             Component textComponent = Component.text(text);
-            TextColor textColor = TextColor.fromHexString(color);
 
+            TextColor textColor = TextColor.fromHexString(color);
             if (textColor != null) {
                 textComponent = textComponent.color(textColor);
             }
@@ -53,7 +59,9 @@ public final class UIRenderer {
         }
 
         if (renderedComponents.isEmpty()) {
-            player.sendActionBar(Component.text("NEXUI: No text components"));
+            player.sendActionBar(
+                    Component.text("NEXUI: No text components")
+            );
             return;
         }
 
@@ -61,10 +69,16 @@ public final class UIRenderer {
 
         for (int i = 0; i < renderedComponents.size(); i++) {
             if (i > 0) {
-                output = output.append(
-                        Component.text(" | ")
-                                .color(TextColor.fromHexString("#777777"))
-                );
+                TextColor separatorColor =
+                        TextColor.fromHexString("#777777");
+
+                Component separator = Component.text(" | ");
+
+                if (separatorColor != null) {
+                    separator = separator.color(separatorColor);
+                }
+
+                output = output.append(separator);
             }
 
             output = output.append(renderedComponents.get(i));
