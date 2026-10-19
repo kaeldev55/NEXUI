@@ -30,50 +30,84 @@ public final class UIProject {
             JavaPlugin plugin,
             String projectId
     ) {
-        if (!projectId.matches("[a-zA-Z0-9_-]+")) {
-            throw new IllegalArgumentException("Invalid project ID");
+        // Validate project ID
+        if (projectId == null
+                || !projectId.matches("[a-zA-Z0-9_-]+")) {
+            throw new IllegalArgumentException(
+                    "Invalid project ID: " + projectId
+            );
         }
 
+        // Resolve project file
+        File projectsFolder = new File(
+                plugin.getDataFolder(),
+                "projects"
+        );
+
         File file = new File(
-                new File(plugin.getDataFolder(), "projects"),
+                projectsFolder,
                 projectId + ".yml"
         );
 
+        // Check whether project exists
         if (!file.isFile()) {
             throw new IllegalArgumentException(
                     "Project not found: " + projectId
+                            + " | Looking at: "
+                            + file.getAbsolutePath()
             );
         }
 
+        // Load YAML
         YamlConfiguration yaml =
                 YamlConfiguration.loadConfiguration(file);
 
+        // Validate format
         if (!"nexui".equals(yaml.getString("format"))) {
             throw new IllegalArgumentException(
-                    "Invalid NEXUI project format"
+                    "Invalid NEXUI project format: " + projectId
             );
         }
 
-        int schemaVersion = yaml.getInt("schemaVersion", -1);
+        // Validate schema version
+        int schemaVersion =
+                yaml.getInt("schemaVersion", -1);
 
         if (schemaVersion != 1) {
             throw new IllegalArgumentException(
-                    "Unsupported schema version: " + schemaVersion
+                    "Unsupported schema version: "
+                            + schemaVersion
             );
         }
 
-        String id = yaml.getString("project.id", projectId);
-        String name = yaml.getString("project.name", "Untitled UI");
+        // Read project metadata
+        String id = yaml.getString(
+                "project.id",
+                projectId
+        );
 
-        List<?> components = yaml.getList("components");
+        String name = yaml.getString(
+                "project.name",
+                "Untitled UI"
+        );
+
+        // Read components
+        List<?> components =
+                yaml.getList("components");
 
         if (components == null) {
             throw new IllegalArgumentException(
-                    "Missing components list"
+                    "Missing components list: " + projectId
             );
         }
 
-        return new UIProject(id, name, schemaVersion, components);
+        // Return loaded project
+        return new UIProject(
+                id,
+                name,
+                schemaVersion,
+                components
+        );
     }
 
     public String getId() {
