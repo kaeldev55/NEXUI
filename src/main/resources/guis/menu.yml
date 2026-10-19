@@ -1,0 +1,21 @@
+
+title: "&8NEXUI &7| &bDashboard"
+size: 27
+
+items:
+  preview:
+    slot: 11
+    material: COMPASS
+    name: "&b&lUI Preview"
+    lore:
+      - "&7Klik untuk melihat status NEXUI."
+    action: "MESSAGE:&aNEXUI GUI berhasil!"
+
+  close:
+    slot: 15
+    material: BARRIER
+    name: "&c&lClose"
+    lore:
+      - "&7Klik untuk menutup menu."
+    action: "CLOSE"
+    
