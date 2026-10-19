@@ -1,0 +1,15 @@
+name: NEXUI
+version: '0.1.0'
+main: dev.nexui.NexUIPlugin
+api-version: '1.21'
+description: Modular Minecraft UI framework
+author: NEXUI
+commands:
+  nexui:
+    description: Main NEXUI command
+    usage: /nexui
+    permission: nexui.admin
+permissions:
+  nexui.admin:
+    description: Access NEXUI administration commands
+    default: op
