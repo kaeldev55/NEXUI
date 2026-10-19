@@ -1,0 +1,25 @@
+
+format: nexui
+schemaVersion: 1
+
+project:
+  id: my-first-ui
+  name: My First UI
+
+components:
+  - id: welcome-text
+    type: text
+    visible: true
+    properties:
+      text: "Welcome to NEXUI"
+      color: "#FFFFFF"
+      alignment: center
+
+  - id: status-label
+    type: text
+    visible: true
+    properties:
+      text: "UI project loaded"
+      color: "#A78BFA"
+      alignment: center
+      
